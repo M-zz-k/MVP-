@@ -1,14 +1,15 @@
 import rasterio
 from rasterio.windows import from_bounds
 from rasterio.warp import transform_bounds
-
+from rasterio.enums import Resampling
 
 def read_aoi_from_cog(
     cog_url: str,
     min_lon: float,
     min_lat: float,
     max_lon: float,
-    max_lat: float
+    max_lat: float,
+    output_shape=None
 ):
     """
     Reads only the requested AOI from a remote COG.
@@ -39,10 +40,18 @@ def read_aoi_from_cog(
         window = window.round_offsets().round_lengths()
 
         # Read ONLY the requested window
-        data = src.read(
+        if output_shape:
+            data = src.read(
+            1,
+            window=window,
+            out_shape=output_shape,
+            resampling=Resampling.nearest
+            )
+        else:
+            data = src.read(
             1,
             window=window
-        )
+            )
 
         return {
             "data": data,
