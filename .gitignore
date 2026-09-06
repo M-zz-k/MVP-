@@ -1,1 +1,25 @@
+# Virtual Environment
 .venv/
+venv/
+ENV/
+
+# Environment Variables & Secrets
+.env
+*.env
+backend/.env
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Generated Assets & Outputs
+maps/
+graphs/
+
+# IDE & OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

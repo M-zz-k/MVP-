@@ -1,7 +1,7 @@
 from pystac_client import Client
 import planetary_computer
 import numpy as np
-from backend.app.services.raster_service import read_aoi_from_cog
+from app.services.raster_service import read_aoi_from_cog
 
 STAC_URL = "https://planetarycomputer.microsoft.com/api/stac/v1"
 

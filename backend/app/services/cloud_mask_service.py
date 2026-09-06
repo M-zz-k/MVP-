@@ -1,6 +1,6 @@
 import numpy as np
 
-from backend.app.services.raster_service import read_aoi_from_cog
+from app.services.raster_service import read_aoi_from_cog
 
 
 # Sentinel-2 SCL classes to remove
