@@ -9,7 +9,7 @@ for p in [str(backend_dir), str(project_root)]:
     if p not in sys.path:
         sys.path.insert(0, p)
 
-from app.services.nlp_service import parse_natural_language
+from services.llm_service import parse_natural_language
 
 test_queries = [
     "Calculate NDVI for Bengaluru in May 2024 with less than 20% cloud cover.",
