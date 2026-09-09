@@ -1,0 +1,21 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: "DM Sans", Arial, sans-serif;
+  background: #f7f9fb;
+  color: #16283b;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: #dcecf3;
+  color: #102c4b;
+}
