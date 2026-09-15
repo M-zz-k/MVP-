@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 from pathlib import Path
@@ -82,6 +83,203 @@ def process_query(request: QueryRequest):
     Natural Language -> Gemini Extraction -> Pydantic Validation -> Query Planner (with AOI priority) -> Execution Engine -> Explanation
     """
     start_total = time.time()
+    
+    # DEMO MODE - allows frontend testing without using Gemini quota
+    DEMO_MODE = os.getenv("DEMO_MODE", "true").lower() == "true"
+
+    if DEMO_MODE:
+        text = request.text.lower()
+
+        # Default demo location
+        location = "Bengaluru"
+        latitude = 12.9716
+        longitude = 77.5946
+
+        # ---------------------------------------------------------
+        # WATER BODIES / NDWI
+        # ---------------------------------------------------------
+        if "water" in text or "ndwi" in text:
+            location = "Karnataka"
+            latitude = 15.3173
+            longitude = 75.7139
+
+            return {
+                "query": {
+                    "original": request.text,
+                    "interpreted_as": "ndwi"
+                },
+                "structured_query": {
+                    "analysis_type": "ndwi",
+                    "location": location,
+                    "start_date": "2026-08-01",
+                    "end_date": "2026-09-30",
+                    "max_cloud_cover": 100
+                },
+                "resolved_location": {
+                    "name": location,
+                    "latitude": latitude,
+                    "longitude": longitude,
+                    "bbox": None,
+                    "has_polygon_aoi": False
+                },
+                "query_plan": {
+                    "analysis_type": "ndwi",
+                    "location_name": location,
+                    "latitude": latitude,
+                    "longitude": longitude
+                },
+                "performance_metrics": {
+                    "nlp_parsing_time_sec": 0.01,
+                    "planning_geocoding_time_sec": 0.01,
+                    "data_access_analysis_time_sec": 0.05,
+                    "llm_explanation_time_sec": 0.00,
+                    "total_time_sec": 0.07,
+                    "traditional_download_estimate_sec": 300
+                },
+                "analysis": {
+                    "mean_ndwi": 0.31,
+                    "min_ndwi": -0.42,
+                    "max_ndwi": 0.82,
+                    "water_coverage_percent": 18.7,
+                    "valid_count": 333931,
+                    "cloud_cover": 28.4,
+                    "satellite": "Sentinel-2",
+                    "date": "2026-08-10",
+                    "scene": {
+                        "id": "DEMO_SENTINEL_2_WATER_SCENE",
+                        "datetime": "2026-08-10",
+                        "cloud_cover": 28.4
+                    }
+                },
+                "answer": (
+                    "Demo water-body analysis completed successfully. "
+                    "The result represents sample NDWI data for Karnataka "
+                    "and is provided for testing the GeoQuery AI interface "
+                    "without using the Gemini API."
+                )
+            }
+
+        # ---------------------------------------------------------
+        # LAND COVER / CHANGE DETECTION
+        # ---------------------------------------------------------
+        if "land cover" in text or "urban" in text or "change" in text:
+            location = "Karnataka"
+            latitude = 15.3173
+            longitude = 75.7139
+
+            return {
+                "query": {
+                    "original": request.text,
+                    "interpreted_as": "change_detection"
+                },
+                "structured_query": {
+                    "analysis_type": "change_detection",
+                    "location": location,
+                    "start_date": "2018-01-01",
+                    "end_date": "2024-12-31",
+                    "max_cloud_cover": 100
+                },
+                "resolved_location": {
+                    "name": location,
+                    "latitude": latitude,
+                    "longitude": longitude,
+                    "bbox": None,
+                    "has_polygon_aoi": False
+                },
+                "query_plan": {
+                    "analysis_type": "change_detection",
+                    "location_name": location,
+                    "latitude": latitude,
+                    "longitude": longitude
+                },
+                "performance_metrics": {
+                    "nlp_parsing_time_sec": 0.01,
+                    "planning_geocoding_time_sec": 0.01,
+                    "data_access_analysis_time_sec": 0.05,
+                    "llm_explanation_time_sec": 0.00,
+                    "total_time_sec": 0.07,
+                    "traditional_download_estimate_sec": 300
+                },
+                "analysis": {
+                    "changed_area_percent": 14.8,
+                    "urban_expansion_percent": 9.6,
+                    "vegetation_change_percent": -4.2,
+                    "water_change_percent": 1.7,
+                    "cloud_cover": 24.6,
+                    "satellite": "Sentinel-2",
+                    "date": "2024-12-31",
+                    "scene": {
+                        "id": "DEMO_SENTINEL_2_CHANGE_SCENE",
+                        "datetime": "2024-12-31",
+                        "cloud_cover": 24.6
+                    }
+                },
+                "answer": (
+                    "Demo land-cover change analysis completed successfully. "
+                    "The result represents sample satellite change data for "
+                    "Karnataka and is provided for testing the GeoQuery AI "
+                    "interface without using the Gemini API."
+                )
+            }
+
+        # ---------------------------------------------------------
+        # DEFAULT / VEGETATION / NDVI
+        # ---------------------------------------------------------
+        return {
+            "query": {
+                "original": request.text,
+                "interpreted_as": "ndvi"
+            },
+            "structured_query": {
+                "analysis_type": "ndvi",
+                "location": "Bengaluru",
+                "start_date": "2026-08-01",
+                "end_date": "2026-09-30",
+                "max_cloud_cover": 100
+            },
+            "resolved_location": {
+                "name": "Bengaluru",
+                "latitude": 12.9716,
+                "longitude": 77.5946,
+                "bbox": None,
+                "has_polygon_aoi": False
+            },
+            "query_plan": {
+                "analysis_type": "ndvi",
+                "location_name": "Bengaluru",
+                "latitude": 12.9716,
+                "longitude": 77.5946
+            },
+            "performance_metrics": {
+                "nlp_parsing_time_sec": 0.01,
+                "planning_geocoding_time_sec": 0.01,
+                "data_access_analysis_time_sec": 0.05,
+                "llm_explanation_time_sec": 0.00,
+                "total_time_sec": 0.07,
+                "traditional_download_estimate_sec": 300
+            },
+            "analysis": {
+                "mean_ndvi": 0.247,
+                "min_ndvi": -0.129,
+                "max_ndvi": 0.687,
+                "std_ndvi": 0.139,
+                "vegetation_coverage_percent": 62.4,
+                "valid_count": 333931,
+                "cloud_cover": 32.9,
+                "satellite": "Sentinel-2",
+                "date": "2026-08-10",
+                "scene": {
+                    "id": "DEMO_SENTINEL_2_SCENE",
+                    "datetime": "2026-08-10",
+                    "cloud_cover": 32.9
+                }
+            },
+            "answer": (
+                "Demo vegetation analysis completed successfully. "
+                "This is sample NDVI data for Bengaluru generated for "
+                "testing the GeoQuery AI interface without using the Gemini API."
+            )
+        }
 
     # Step 1: LLM Extraction
     nlp_start = time.time()
